@@ -1,19 +1,15 @@
 <template>
   <div class="container">
     <nav-bar />
-    <banner
-      title="Baby Name @UK"
-      subtitle="Find out more about baby names in the UK."
-    />
     <section class="section">
       <div class="field has-addons">
         <p class="control is-expanded">
-          <input class="input" type="text" v-model="name" placeholder="Type in your name">
+          <input class="input" type="text" :value="$route.params.name" placeholder="Type in your name">
         </p>
         <p class="control">
-          <router-link :to="'/name/'+name" class="button">
+          <a class="button">
             Explore
-          </router-link>
+          </a>
         </p>
       </div>
     </section>
@@ -30,15 +26,14 @@
 
 <script>
 import NavBar from './NavBar'
-import Banner from './Banner'
 export default {
-  name: 'home-page',
+  name: 'detail-page',
   components: {
-    NavBar, Banner
+    NavBar
   },
   data () {
     return {
-      name: ''
+      msg: 'Welcome to Your Vue.js App'
     }
   }
 }
