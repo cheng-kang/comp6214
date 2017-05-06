@@ -17,20 +17,23 @@
         </p>
       </div>
     </section>
-    <div class="content">
-      <ul>
-        <li><router-link to="/is-my-name-common">Is my name more English/Scottish?</router-link></li>
-        <li><router-link to="/is-my-name-common">Is my name common?</router-link></li>
-        <li><router-link to="/is-my-name-common">What's the meaning of my name?</router-link></li>
-        <li>...</li>
-      </ul>
-    </div>
+    <section class="section">
+      <div class="columns">
+        <div class="column" v-for="(page, index) in pages" :key="index">
+          <div class="card">
+            <div class="card-content">
+              <router-link :to="page.link">{{page.title}}</router-link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
-import NavBar from './NavBar'
-import Banner from './Banner'
+import NavBar from '../components/NavBar'
+import Banner from '../components/Banner'
 export default {
   name: 'home-page',
   components: {
@@ -38,7 +41,25 @@ export default {
   },
   data () {
     return {
-      name: ''
+      name: '',
+      pages: [
+        {
+          link: '/is-my-name-common',
+          title: 'Is my name common?'
+        },
+        {
+          link: '/is-more',
+          title: 'Is my name more English/Scottish?'
+        },
+        {
+          link: '/is-my-name-common',
+          title: 'What\'s the meaning of my name?'
+        },
+        {
+          link: '/is-my-name-common',
+          title: 'Rank my name!'
+        }
+      ]
     }
   }
 }
@@ -60,5 +81,9 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+.card {
+  min-height: 300px;
 }
 </style>

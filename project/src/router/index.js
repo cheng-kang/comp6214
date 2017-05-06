@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HomePage from '@/components/HomePage'
-import IsCommonPage from '@/components/IsCommonPage'
-import DetailPage from '@/components/DetailPage'
+import HomePage from '@/pages/HomePage'
+import IsCommonPage from '@/pages/IsCommonPage'
+import IsMorePage from '@/pages/IsMorePage'
+import DetailPage from '@/pages/DetailPage'
 
 Vue.use(Router)
 
@@ -17,6 +18,11 @@ export default new Router({
       path: '/is-my-name-common',
       name: 'is-common-page',
       component: IsCommonPage
+    },
+    {
+      path: '/is-more',
+      name: 'is-more-page',
+      component: IsMorePage
     },
     {
       path: '/name/:name',

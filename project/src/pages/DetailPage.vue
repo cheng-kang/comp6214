@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import NavBar from './NavBar'
+import NavBar from '../components/NavBar'
 export default {
   name: 'detail-page',
   components: {

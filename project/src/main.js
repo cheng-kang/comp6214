@@ -4,9 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Trend from 'vuetrend'
+import SocialSharing from 'vue-social-sharing'
 
 Vue.config.productionTip = false
 Vue.use(Trend)
+Vue.use(SocialSharing)
 
 /* eslint-disable no-new */
 new Vue({

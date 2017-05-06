@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import NavBar from './NavBar'
-import Banner from './Banner'
+import NavBar from '../components/NavBar'
+import Banner from '../components/Banner'
 export default {
   name: 'is-common-page',
   components: {
@@ -30,7 +30,6 @@ export default {
   },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
     }
   }
 }
@@ -38,25 +37,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
-
-a:hover {
-  text-decoration: underline;
-}
 </style>
