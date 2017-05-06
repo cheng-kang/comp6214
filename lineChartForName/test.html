@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 100%"></div>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+<!--
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+-->
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+       <script type="text/javascript">
+            var dom = document.getElementById("container");
+            var myChart = echarts.init(dom);
+            var app = {};
+            //option = null;
+            
+            $.get('dataset.json').done(function (data) {
+                var targetData = data.filter(function (n) {
+                    //Name obtained from search box
+                    return n.name === 'JACK';
+                });
+                //Arrays to store information for different regions
+                var engData = targetData.filter(function (n) {
+                    return n.country ==='England';
+                });
+                var scoData = targetData.filter(function (n) {
+                    return n.country ==='Scotland';
+                });
+                var walData = targetData.filter(function (n) {
+                    return n.country ==='Wales';
+                });
+                var ireData = targetData.filter(function (n) {
+                    return n.country ==='Northern Ireland';
+                });
+                //Arrays to store ranks for different regions
+                var engRank = [], scoRank = [], walRank = [], ireRank = [];
+                for(var i=0; i<6; i++) {
+                    engRank.push(engData[i].rank);
+                    scoRank.push(scoData[i].rank);
+                    walRank.push(walData[i].rank);
+                    ireRank.push(ireData[i].rank);
+                }
+                //set option for the line chart
+                myChart.setOption({
+                title: {
+                    text: 'The rank change from 2010 to 2015',
+                    subtext: 'Jack'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['England','Scotland','Wales','Northern Ireland']
+                },
+                xAxis:  {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['2010','2011','2012','2013','2014','2015'],
+                    name: 'Year',
+                    axisLine: {onZero: false}
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Rank',
+                    nameLocation: 'middle',
+                    nameGap: 25,
+                    inverse: true
+                },
+                series: [{
+                    name:'England',
+                    type:'line',
+                    data:engRank,
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: 'Lowest rank'},
+                            {type: 'min', name: 'Highest rank'}
+                        ]
+                    },
+                    markLine: {
+                        data: [
+                            {type: 'average', name: 'Average rank'}
+                        ]
+                    }
+                    },
+                    {
+                    name:'Scotland',
+                    type:'line',
+                    data:scoRank,
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: 'Lowest rank'},
+                            {type: 'min', name: 'Highest rank'}
+                        ]
+                    },
+                    markLine: {
+                        data: [
+                            {type: 'average', name: 'Average rank'}
+                        ]
+                    }
+                    },
+                    {
+                    name:'Wales',
+                    type:'line',
+                    data:walRank,
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: 'Lowest rank'},
+                            {type: 'min', name: 'Highest rank'}
+                        ]
+                    },
+                    markLine: {
+                        data: [
+                            {type: 'average', name: 'Average rank'}
+                        ]
+                    }
+                    },
+                    {
+                    name:'Northern Ireland',
+                    type:'line',
+                    data:ireRank,
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: 'Lowest rank'},
+                            {type: 'min', name: 'Highest rank'}
+                        ]
+                    },
+                    markLine: {
+                        data: [
+                            {type: 'average', name: 'Average rank'}
+                        ]
+                    }
+                    }
+                ]
+            });
+            });
+            /*if (option && typeof option === "object") {
+                myChart.setOption(option, true);
+            }*/
+       </script>
+   </body>
+</html>
