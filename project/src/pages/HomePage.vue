@@ -56,7 +56,7 @@ export default {
           title: 'What\'s the meaning of my name?'
         },
         {
-          link: '/is-my-name-common',
+          link: '/rank-my-name',
           title: 'Rank my name!'
         }
       ]

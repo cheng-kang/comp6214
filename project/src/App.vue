@@ -1,16 +1,19 @@
 <template>
   <div id="app">
     <router-view></router-view>
-    <footer class="footer">
+    <footer class="footer" style="padding: 3rem 1.5rem 2rem 1.5rem;">
       <div class="container">
         <div class="content has-text-centered">
           <p>
-            <strong>Baby Name @UK</strong> by <a href="#">Fahad Altuwaijri </a>, <a href="#">Kang Cheng </a>, <a href="#">Jeevan Cyriac </a>, <a href="#">Haihan Jiang </a>, <a href="#">Yahya Majrashi </a>. 
-          </p>
-          <p>
+            <strong>Baby Name @UK</strong> 
+            <br>
+            <small>
+            by <a href="#">Fahad Altuwaijri </a>, <a href="http://chengkang.pw">Kang Cheng </a>, <a href="#">Jeevan Cyriac </a>, <a href="#">Haihan Jiang </a>, <a href="#">Yahya Majrashi </a>. 
+            <br>
             The source code is licensed
             <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
             is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC ANS 4.0</a>.
+            </small>
           </p>
           <p>
             <a class="icon" href="https://github.com/cheng-kang/comp6214">
@@ -38,9 +41,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-.footer {
-  padding: 3rem 1.5rem 3rem;
 }
 </style>

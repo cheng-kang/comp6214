@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HomePage from '@/pages/HomePage'
 import IsCommonPage from '@/pages/IsCommonPage'
 import IsMorePage from '@/pages/IsMorePage'
+import RankMyNamePage from '@/pages/RankMyNamePage'
 import DetailPage from '@/pages/DetailPage'
 
 Vue.use(Router)
@@ -23,6 +24,11 @@ export default new Router({
       path: '/is-more',
       name: 'is-more-page',
       component: IsMorePage
+    },
+    {
+      path: '/rank-my-name',
+      name: 'rank-my-name-page',
+      component: RankMyNamePage
     },
     {
       path: '/name/:name',

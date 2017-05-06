@@ -25,7 +25,7 @@
         <div class="column">
           <div class="card">
             <div class="card-content">
-              <IEcharts :option="bar" :loading="loading" :highlight="highlight" @ready="onReady" @click="onClick"></IEcharts>
+              <IEcharts :option="bar" :loading="loading" :highlight="highlight" @ready="onReady"></IEcharts>
             </div>
             <footer class="card-footer">
               <div class="card-footer-item">
@@ -215,9 +215,6 @@ export default {
   methods: {
     onReady (instance) {
       this.loading = false
-    },
-    onClick (event, instance, echarts) {
-      console.log(arguments)
     },
     formatWithComma (n) {
       return numeral(n).format(0)
