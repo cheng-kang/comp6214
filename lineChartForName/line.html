@@ -2,25 +2,17 @@
 <html style="height: 100%">
    <head>
        <meta charset="utf-8">
+       <title>Line Chart</title>
    </head>
    <body style="height: 100%; margin: 0">
        <div id="container" style="height: 100%"></div>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
-<!--
-       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
-       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
-       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
-       <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
-       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
--->
        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
        <script type="text/javascript">
-            var dom = document.getElementById("container");
-            var myChart = echarts.init(dom);
-            var app = {};
-            //option = null;
-            
-            $.get('dataset.json').done(function (data) {
+           var dom = document.getElementById("container");
+           var myChart = echarts.init(dom);
+           var app = {};
+           $.get('dataset.json').done(function (data) {
                 var targetData = data.filter(function (n) {
                     //Name obtained from search box
                     return n.name === 'JACK';
@@ -39,13 +31,27 @@
                     return n.country ==='Northern Ireland';
                 });
                 //Arrays to store ranks for different regions
-                var engRank = [], scoRank = [], walRank = [], ireRank = [];
-                for(var i=0; i<6; i++) {
-                    engRank.push(engData[i].rank);
-                    scoRank.push(scoData[i].rank);
-                    walRank.push(walData[i].rank);
-                    ireRank.push(ireData[i].rank);
+                var engRank = [null, null, null, null, null, null], 
+                    scoRank = [null, null, null, null, null, null], 
+                    walRank = [null, null, null, null, null, null], 
+                    ireRank = [null, null, null, null, null, null];
+                //Arrays to store numbers of a name for different regions
+                var engNumber = [0, 0, 0, 0, 0, 0],
+                    scoNumber = [0, 0, 0, 0, 0, 0],
+                    walNumber = [0, 0, 0, 0, 0, 0],
+                    ireNumber = [0, 0, 0, 0, 0, 0];
+                var allData = [engData, scoData, walData, ireData],
+                    allRank = [engRank, scoRank, walRank, ireRank],
+                    allNumber = [engNumber, scoNumber, walNumber, ireNumber];
+                for(var i=0; i<4; i++) {
+                    for(var j=0; j<allData[i].length; j++){
+                        //Skip the years where the rank is absent, leave them null
+                        allRank[i][allData[i][j].year - 2010] = allData[i][j].rank;
+                        //Skip the years where the number is absent, leave them 0
+                        allNumber[i][allData[i][j].year - 2010] = allData[i][j].count;
+                    }
                 }
+               console.log(allNumber);
                 //set option for the line chart
                 myChart.setOption({
                 title: {
@@ -58,6 +64,7 @@
                 legend: {
                     data:['England','Scotland','Wales','Northern Ireland']
                 },
+                calculable: true,
                 xAxis:  {
                     type: 'category',
                     boundaryGap: false,
@@ -138,7 +145,8 @@
                     }
                 ]
             });
-            });
+        });
+            
             /*if (option && typeof option === "object") {
                 myChart.setOption(option, true);
             }*/
