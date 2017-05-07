@@ -12,10 +12,45 @@
            var dom = document.getElementById("container");
            var myChart = echarts.init(dom);
            var app = {};
-           $.get('dataset.json').done(function (data) {
-                var targetData = data.filter(function (n) {
+           //Function(json file and search name as parameters) for finding the counts for a name
+           var findCount = function(data, name) {
+               var targetData = data.filter(function (n) {
                     //Name obtained from search box
-                    return n.name === 'JACK';
+                    return n.name === name;
+                });
+                //Arrays to store information for different regions
+                var engData = targetData.filter(function (n) {
+                    return n.country ==='England';
+                });
+                var scoData = targetData.filter(function (n) {
+                    return n.country ==='Scotland';
+                });
+                var walData = targetData.filter(function (n) {
+                    return n.country ==='Wales';
+                });
+                var ireData = targetData.filter(function (n) {
+                    return n.country ==='Northern Ireland';
+                });
+                //Arrays to store numbers of a name for different regions and years
+                var engCount = [0, 0, 0, 0, 0, 0],
+                    scoCount = [0, 0, 0, 0, 0, 0],
+                    walCount = [0, 0, 0, 0, 0, 0],
+                    ireCount = [0, 0, 0, 0, 0, 0];
+                var allData = [engData, scoData, walData, ireData],
+                    allCount = [engCount, scoCount, walCount, ireCount];
+                for(var i=0; i<4; i++) {
+                    for(var j=0; j<allData[i].length; j++){
+                        //Skip the years where the number is absent, leave them 0
+                        allCount[i][allData[i][j].year - 2010] = allData[i][j].count;
+                    }
+                }
+               return allCount;
+           };
+           //Function(json file and search name as parameters) for finding the ranks for a name
+           var findRank = function(data, name) {
+               var targetData = data.filter(function (n) {
+                    //Name obtained from search box
+                    return n.name === name;
                 });
                 //Arrays to store information for different regions
                 var engData = targetData.filter(function (n) {
@@ -35,23 +70,29 @@
                     scoRank = [null, null, null, null, null, null], 
                     walRank = [null, null, null, null, null, null], 
                     ireRank = [null, null, null, null, null, null];
-                //Arrays to store numbers of a name for different regions
-                var engNumber = [0, 0, 0, 0, 0, 0],
-                    scoNumber = [0, 0, 0, 0, 0, 0],
-                    walNumber = [0, 0, 0, 0, 0, 0],
-                    ireNumber = [0, 0, 0, 0, 0, 0];
                 var allData = [engData, scoData, walData, ireData],
-                    allRank = [engRank, scoRank, walRank, ireRank],
-                    allNumber = [engNumber, scoNumber, walNumber, ireNumber];
+                    allRank = [engRank, scoRank, walRank, ireRank];
                 for(var i=0; i<4; i++) {
                     for(var j=0; j<allData[i].length; j++){
                         //Skip the years where the rank is absent, leave them null
                         allRank[i][allData[i][j].year - 2010] = allData[i][j].rank;
-                        //Skip the years where the number is absent, leave them 0
-                        allNumber[i][allData[i][j].year - 2010] = allData[i][j].count;
                     }
                 }
-               console.log(allNumber);
+               return allRank;
+           };
+           $.get('dataset.json').done(function (data) {
+                //ranks for JACK
+                var ranks = findRank(data, 'JACK');
+                //Arrays to store ranks for different regions
+                var engRank = ranks[0], 
+                    scoRank = ranks[1], 
+                    walRank = ranks[2], 
+                    ireRank = ranks[3];
+               
+               //counts for JACK
+               var counts = findCount(data, 'JACK');
+               console.log(counts);
+               
                 //set option for the line chart
                 myChart.setOption({
                 title: {
