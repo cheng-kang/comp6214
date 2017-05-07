@@ -86,7 +86,7 @@
         </div>
       </div>
     </section>
-    <section class="section">
+    <section class="section" :class="{ isMobile: isMobile}">
       <article class="message is-success">
         <div class="message-body">
           {{name}}, your name is more <span style="text-transform: uppercase;">{{info.people[highlight]}}</span>!
@@ -128,6 +128,7 @@
 
 <script>
 import IEcharts from 'vue-echarts-v3/src/full.vue'
+import MobileDetect from 'mobile-detect'
 import numeral from 'numeral'
 import NavBar from '../components/NavBar'
 import Banner from '../components/Banner'
@@ -163,6 +164,10 @@ export default {
     }
   },
   computed: {
+    isMobile () {
+      const md = new MobileDetect(window.navigator.userAgent)
+      return md.mobile() !== null
+    },
     highlight () {
       let max = 0
       for (var i = 1; i < this.info.p.length; i++) {
@@ -250,5 +255,8 @@ th {
 }
 .highlight.title {
   color: #3273dc;
+}
+.isMobile {
+  padding-top: 0;
 }
 </style>

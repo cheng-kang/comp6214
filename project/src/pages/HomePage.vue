@@ -44,15 +44,15 @@ export default {
       name: '',
       pages: [
         {
-          link: '/is-my-name-common',
-          title: 'Is my name common?'
+          link: '/more-popular-names',
+          title: 'Most popular names!'
         },
         {
           link: '/is-more',
-          title: 'Is my name more English/Scottish?'
+          title: 'Is my name more English/Scottish...?'
         },
         {
-          link: '/is-my-name-common',
+          link: '/meaning',
           title: 'What\'s the meaning of my name?'
         },
         {

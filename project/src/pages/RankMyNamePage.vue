@@ -8,7 +8,7 @@
     <section class="section">
       <div class="field has-addons">
         <p class="control is-expanded">
-          <input class="input" type="text" v-model="name" placeholder="Type in your name" @change="onChange($event)">
+          <input class="input" id="name-input" type="text" v-model="name" placeholder="Type in your name" @change="onChange($event)">
         </p>
         <p class="control">
           <a class="button">
@@ -16,8 +16,17 @@
           </a>
         </p>
       </div>
+      <div class="content">
+        <span 
+          class="tag"
+          v-for="item in matches"
+          @click="clickOnTag(item)"
+        >
+          {{item}}
+        </span>
+      </div>
     </section>
-    <section class="section" v-show="name !== ''">
+    <section class="section" :class="{ isMobile: isMobile }" v-show="name !== ''">
       <h1 class="title is-5"><strong>{{name.toUpperCase()}}</strong>, let's see your result:</h1>
       <div class="columns">
         <div class="column is-half is-offset-one-quarter">
@@ -28,14 +37,42 @@
           </div>
         </div>
       </div>
-    </section>
-    <section v-show="name === ''">
       <div class="columns">
         <div class="column is-half is-offset-one-quarter">
-          <article class="message is-info" id="msg-box">
+      <div class="container content">
+        <table style="font-size: 0.8em">
+          <tr>
+            <th></th>
+            <th>2010</th>
+            <th>2011</th>
+            <th>2012</th>
+            <th>2013</th>
+            <th>2014</th>
+            <th>2015</th>
+          </tr>
+          <tr
+            v-for="(which, index) in [engRank, scoRank, walRank, ireRank]"
+            :key="index"
+          >
+            <td>{{area[index]}}</td>
+            <td
+              v-for="(item, idx) in which"
+              :key="idx"
+            >
+              {{item === null ? '-' : item}}
+            </td>
+          </tr>
+        </table>
+      </div>
+        </div>
+      </div>
+    </section>
+    <section class="section" :class="{ isMobile: isMobile }" v-show="name === ''">
+      <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+          <article class="message is-primary" id="msg-box">
             <div class="message-header">
               <p>Rank My Name</p>
-              <button class="delete"></button>
             </div>
             <div class="message-body">
               Type in your name in the search box above!
@@ -85,6 +122,8 @@ export default {
   data () {
     return {
       name: '',
+      matches: [],
+      area: ['England', 'Scotland', 'Wales', 'N-Ireland'],
       loading: true,
       engRank: [],
       scoRank: [],
@@ -96,6 +135,11 @@ export default {
     isMobile () {
       const md = new MobileDetect(window.navigator.userAgent)
       return md.mobile() !== null
+    },
+    names () {
+      return dataset.map((item) => {
+        return item.name
+      })
     },
     line () {
       return {
@@ -208,12 +252,36 @@ export default {
       }
     }
   },
+  watch: {
+    name () {
+      this.renderChart()
+
+      const nameLowerCase = this.name.toLowerCase()
+      const nameLength = nameLowerCase.length
+
+      var matches = new Set()
+      if (nameLength !== 0) {
+        for (let i = 0; i < this.names.length; i++) {
+          if (this.names[i].substring(0, nameLength) === nameLowerCase) {
+            matches.add(this.names[i])
+          }
+        }
+      }
+      if (matches.size !== 1) {
+        this.matches = [...matches].slice(0, 10)
+      } else {
+        this.matches = []
+      }
+    }
+  },
   methods: {
     onReady (instance) {
       this.loading = false
     },
     onChange () {
-      this.renderChart()
+    },
+    clickOnTag (item) {
+      this.name = item
     },
     renderChart () {
       const nameLowerCase = this.name.toLowerCase()
@@ -263,5 +331,12 @@ export default {
 }
 .message {
   margin: 3em 0;
+}
+.isMobile {
+  padding-top: 0;
+}
+.tag:hover {
+  background-color: #e2e2e2;
+  cursor: pointer;
 }
 </style>
