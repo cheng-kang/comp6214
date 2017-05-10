@@ -80,6 +80,33 @@
                 }
                return allRank;
            };
+           
+           //Find the counts for a name in different regions in a specific year
+           var findCounts = function (data, name, year) {
+                    var nameData = data.filter(function(d) {
+                    return d.name === name.toLowerCase() && d.year === parseInt(year);
+                    });
+                    
+                    //Count array respectively for England, Wales, Scotland, Northern Ireland
+                    var nameCount = [null, null, null, null];
+                    for(var i = 0; i < nameData.length; i++) {
+                        switch(nameData[i].country) {
+                            case 'England':
+                                nameCount[0] = nameData[i].count;
+                                break;
+                            case 'Wales':
+                                nameCount[1] = nameData[i].count;
+                                break;
+                            case 'Scotland':
+                                nameCount[2] = nameData[i].count;
+                                break;
+                            case 'Northern Ireland':
+                                nameCount[3] = nameData[i].count;
+                        }
+                    }
+                    return nameCount;
+            };
+           
            $.get('dataset.json').done(function (data) {
                 //ranks for JACK
                 var ranks = findRank(data, 'JACK');
@@ -91,7 +118,9 @@
                
                //counts for JACK
                var counts = findCount(data, 'JACK');
-               console.log(counts);
+               
+               //name and year: strings
+               var nameCount = findCounts(data, 'George', '2012');
                
                 //set option for the line chart
                 myChart.setOption({
