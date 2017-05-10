@@ -107,6 +107,24 @@
                     return nameCount;
             };
            
+           //Find the top k names of some gender in some region in some year
+           //if region is not All Region
+           var filterNames = function(data, start, end, gender, year, region) {
+               var gender1 = gender === 'Boy Only'? 'M':'F';
+               var filterData = data.filter(function(d) {
+                   return d.rank >= parseInt(start) && d.rank <= parseInt(end) && d.gender === gender1 && d.year === parseInt(year) && d.country === region;
+               });
+               console.log(filterData);
+               //Name for y axis and count for x axis
+               var barData = {name: [], count: []};
+               for(var i = 0; i < filterData.length; i++) {
+                   barData.name.push(filterData[i].name);
+                   barData.count.push(filterData[i].count);
+               }
+               console.log(barData);
+               return barData;
+           };
+           
            $.get('dataset.json').done(function (data) {
                 //ranks for JACK
                 var ranks = findRank(data, 'JACK');
@@ -121,6 +139,8 @@
                
                //name and year: strings
                var nameCount = findCounts(data, 'George', '2012');
+               
+               var barData = filterNames(data, '11', '20', 'Boy Only', '2015', 'England');
                
                 //set option for the line chart
                 myChart.setOption({
