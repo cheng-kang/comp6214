@@ -75,15 +75,13 @@ option = {
     tooltip: {},
     title: [{
         text: 'Top Names',
-        subtext: '总计 ' + builderJson.all,
-        x: '25%',
-        textAlign: 'center'
+        x: '70%'
     }, ],
     grid: [{
         top: 50,
         width: '50%',
-        bottom: '45%',
-        left: 10,
+        bottom: '10%',     
+        left: '50%', 
         containLabel: true
     }, {
         top: '55%',
@@ -105,7 +103,7 @@ option = {
         data: Object.keys(builderJson.charts),
         axisLabel: {
             interval: 0,
-            rotate: 30
+            rotate: 0
         },
         splitLine: {
             show: false
@@ -118,7 +116,7 @@ option = {
         label: {
             normal: {
                 position: 'right',
-                show: true
+                show: false
             }
         },
         data: Object.keys(builderJson.charts).map(function (key) {
