@@ -2,8 +2,8 @@
   <div class="container">
     <nav-bar />
     <banner
-      title="Baby Name @UK"
-      subtitle="Rank My Name!"
+      title="Rank My Name!"
+      subtitle="Baby Name @UK"
     />
     <section class="section">
       <div class="field has-addons">
@@ -26,10 +26,19 @@
         </span>
       </div>
     </section>
-    <section class="section" :class="{ isMobile: isMobile }" v-show="name !== ''">
+    <section class="section no-top-padding" :class="{ isMobile: isMobile }" v-show="name !== '' && noMatch === false">
       <h1 class="title is-5"><strong>{{name.toUpperCase()}}</strong>, let's see your result:</h1>
       <div class="columns">
-        <div class="column is-half is-offset-one-quarter">
+        <div class="column is-8 is-offset-2">
+          <article class="message is-info">
+            <div class="message-body">
+              Rank History Across the UK
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-8 is-offset-2">
           <div class="card" id="card-box">
             <div class="card-content" id="card">
               <IEcharts :option="line" :loading="loading" @ready="onReady" v-if="name !== ''"></IEcharts>
@@ -38,44 +47,83 @@
         </div>
       </div>
       <div class="columns">
-        <div class="column is-half is-offset-one-quarter">
-      <div class="container content">
-        <table style="font-size: 0.8em">
-          <tr>
-            <th></th>
-            <th>2010</th>
-            <th>2011</th>
-            <th>2012</th>
-            <th>2013</th>
-            <th>2014</th>
-            <th>2015</th>
-          </tr>
-          <tr
-            v-for="(which, index) in [engRank, scoRank, walRank, ireRank]"
-            :key="index"
-          >
-            <td>{{area[index]}}</td>
-            <td
-              v-for="(item, idx) in which"
-              :key="idx"
-            >
-              {{item === null ? '-' : item}}
-            </td>
-          </tr>
-        </table>
-      </div>
+        <div class="column is-8 is-offset-2">
+          <div class="container content table-container">
+            <table style="font-size: 0.8em">
+              <tr>
+                <th>Rank</th>
+                <th>2010</th>
+                <th>2011</th>
+                <th>2012</th>
+                <th>2013</th>
+                <th>2014</th>
+                <th>2015</th>
+              </tr>
+              <tr
+                v-for="(which, index) in [engRank, scoRank, walRank, ireRank]"
+                :key="index"
+              >
+                <td>{{area[index]}}</td>
+                <td
+                  v-for="(item, idx) in which"
+                  :key="idx"
+                >
+                  {{item === null ? '-' : item}}
+                </td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
-    </section>
-    <section class="section" :class="{ isMobile: isMobile }" v-show="name === ''">
       <div class="columns">
-        <div class="column is-half is-offset-one-quarter">
+        <div class="column is-8 is-offset-2">
+          <div class="notification" style="text-align: left; font-size: 0.6em;">
+            *'-' means the name is ranked >100.
+          </div>
+        </div>
+      </div>
+      <result-and-share>
+        <span v-if="isPopular(engRank) || isPopular(scoRank) || isPopular(walRank) || isPopular(ireRank)">
+          {{name.toUpperCase()}}, your name is popular in 
+          <span v-show="isPopular(engRank)">"England"</span>
+          <span v-show="isPopular(scoRank)">"SCOTLAND"</span>
+          <span v-show="isPopular(walRank)">"WALES"</span>
+          <span v-show="isPopular(ireRank)">"NORTHERN IRELAND"</span>
+          !
+          <br> 
+          <br>
+        </span>
+      </result-and-share>
+    </section>
+    <section class="section no-top-padding" :class="{ isMobile: isMobile }" v-show="name === ''">
+      <div class="columns">
+        <div class="column is-8 is-offset-2">
           <article class="message is-primary" id="msg-box">
             <div class="message-header">
               <p>Rank My Name</p>
             </div>
             <div class="message-body">
               Type in your name in the search box above!
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+    <section class="section no-top-padding" :class="{ isMobile: isMobile }" v-show="name !== '' && noMatch">
+      <div class="columns">
+        <div class="column is-8 is-offset-2">
+          <article class="message is-warning" id="msg-box">
+            <div class="message-header">
+              <p>Name Not Found</p>
+            </div>
+            <div class="message-body" style="text-align: left;">
+              Sorry {{name.toUpperCase()}}, your name is not so popular.
+              <br>
+              <small>
+                We can't find your name in the top 100 names data of all regions in the UK.
+                <br>
+                Try this page <a href="#">Find my name</a> and explore more about your name!
+              </small>
             </div>
           </article>
         </div>
@@ -90,10 +138,11 @@ import MobileDetect from 'mobile-detect'
 import dataset from '../assets/dataset'
 import NavBar from '../components/NavBar'
 import Banner from '../components/Banner'
+import ResultAndShare from '../components/ResultAndShare'
 export default {
   name: 'rank-my-name-page',
   components: {
-    NavBar, Banner, IEcharts
+    NavBar, Banner, IEcharts, ResultAndShare
   },
   mounted () {
     const card = document.getElementById('card')
@@ -102,7 +151,7 @@ export default {
     if (this.name === '') {
       let msgBoxStyle = window.getComputedStyle(msgBox)
       if (this.isMobile) {
-        const newWidth = (parseInt(msgBoxStyle.width) - 40) + 'px'
+        const newWidth = (parseInt(msgBoxStyle.width)) + 'px'
         card.style.width = newWidth
         card.style.height = newWidth
         cardBox.style.width = newWidth
@@ -248,7 +297,11 @@ export default {
               name: 'Average rank'
             }]
           }
-        }]
+        }],
+        textStyle: {
+          fontFamily: 'Ravi Prakash',
+          fontSize: 20
+        }
       }
     }
   },
@@ -267,10 +320,16 @@ export default {
           }
         }
       }
-      if (matches.size !== 1) {
-        this.matches = [...matches].slice(0, 10)
-      } else {
+      if (matches.size === 0) {
         this.matches = []
+        this.noMatch = true
+      } else {
+        this.noMatch = false
+        if (matches.size !== 1) {
+          this.matches = [...matches].slice(0, 10)
+        } else {
+          this.matches = []
+        }
       }
     }
   },
@@ -319,6 +378,14 @@ export default {
       this.scoRank = allRank[1]
       this.walRank = allRank[2]
       this.ireRank = allRank[3]
+    },
+    isPopular (list) {
+      for (let i = 0; i < list.length; i++) {
+        if (list[i] !== null) {
+          return true
+        }
+      }
+      return false
     }
   }
 }
@@ -338,5 +405,14 @@ export default {
 .tag:hover {
   background-color: #e2e2e2;
   cursor: pointer;
+}
+.no-top-padding {
+  padding-top: 0;
+}
+
+.table-container {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
 }
 </style>

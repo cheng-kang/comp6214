@@ -5,7 +5,7 @@
       title="Baby Name @UK"
       subtitle="Find out more about baby names in the UK."
     />
-    <section class="section">
+<!--     <section class="section">
       <div class="field has-addons">
         <p class="control is-expanded">
           <input class="input" type="text" v-model="name" placeholder="Type in your name">
@@ -16,14 +16,22 @@
           </router-link>
         </p>
       </div>
-    </section>
+    </section> -->
     <section class="section">
       <div class="columns">
         <div class="column" v-for="(page, index) in pages" :key="index">
-          <div class="card">
+          <div class="card">  
+            <header class="card-header">
+              <p class="card-header-title">
+                <router-link :to="page.link" class="card-header-title-a">{{page.title}}</router-link>
+              </p>
+            </header>
             <div class="card-content">
-              <router-link :to="page.link">{{page.title}}</router-link>
-            </div>
+              <img :src="`../static/${page.image}.png`">
+            </div> 
+            <footer class="card-footer">
+              <router-link :to="page.link" class="card-footer-item">Try it</router-link>
+            </footer>
           </div>
         </div>
       </div>
@@ -44,20 +52,24 @@ export default {
       name: '',
       pages: [
         {
-          link: '/more-popular-names',
-          title: 'Most popular names!'
+          link: '/statistics',
+          title: 'Most popular names!!',
+          image: 'statistics'
         },
         {
           link: '/is-more',
-          title: 'Is my name more English/Scottish...?'
+          title: 'Is my name more English/Scottish...?',
+          image: 'region'
         },
         {
           link: '/meaning',
-          title: 'What\'s the meaning of my name?'
+          title: 'What\'s the meaning of my name?',
+          image: 'meaning'
         },
         {
           link: '/rank-my-name',
-          title: 'Rank my name!'
+          title: 'Rank my name!',
+          image: 'rank'
         }
       ]
     }
@@ -85,5 +97,16 @@ a:hover {
 
 .card {
   min-height: 300px;
+}
+.card-header {
+  height: 54px;
+  line-height: 1em;
+}
+img {
+  max-width: 135px;
+  max-height: 135px;
+}
+.card-header-title-a {
+  color: #484848;
 }
 </style>

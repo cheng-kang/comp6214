@@ -2,13 +2,25 @@
   <div class="container">
     <nav-bar />
     <banner
-      title="Baby Name @UK"
-      subtitle="Is my name more English/Scottish...?"
+      title="Is my name more English/Scottish...?"
+      subtitle="Baby Name @UK"
     />
     <section class="section">
       <div class="field has-addons">
+        <p class="control">
+          <span class="select">
+            <select v-model="selectedYear">
+              <option>2010</option>
+              <option>2011</option>
+              <option>2012</option>
+              <option>2013</option>
+              <option>2014</option>
+              <option>2015</option>
+            </select>
+          </span>
+        </p>
         <p class="control is-expanded">
-          <input class="input" type="text" v-model="name" placeholder="Type in your name">
+          <input class="input" type="text" v-model="name" placeholder="Type in your name" @change="onChange">
         </p>
         <p class="control">
           <a class="button">
@@ -20,12 +32,10 @@
     <section class="section">
       <h1 class="title is-5"><strong>{{name}}</strong>, let's see your result:</h1>
       <div class="columns">
-        <div class="column">
-        </div>
-        <div class="column">
+        <div class="column is-5 is-offset-1">
           <div class="card">
             <div class="card-content">
-              <IEcharts :option="bar" :loading="loading" :highlight="highlight" @ready="onReady"></IEcharts>
+              <IEcharts :option="bar" :loading="loading" :highlight="highlight" :refreshHighlight="refreshHighlight" @ready="onReady"></IEcharts>
             </div>
             <footer class="card-footer">
               <div class="card-footer-item">
@@ -34,7 +44,7 @@
             </footer>
           </div>
         </div>
-        <div class="column">
+        <div class="column is-5">
           <div class="content">
             <div class="message is-info">
               <div class="message-body">
@@ -87,41 +97,11 @@
       </div>
     </section>
     <section class="section" :class="{ isMobile: isMobile}">
-      <article class="message is-success">
-        <div class="message-body">
-          {{name}}, your name is more <span style="text-transform: uppercase;">{{info.people[highlight]}}</span>!
-          <br> 
-          <br>
-          <social-sharing url="https://vuejs.org/" inline-template>
-            <div>
-              <network network="facebook">
-                <i class="fa fa-fw fa-facebook"></i>
-              </network>
-              <network network="googleplus">
-                <i class="fa fa-fw fa-google-plus"></i>
-              </network>
-              <network network="linkedin">
-                <i class="fa fa-fw fa-linkedin"></i>
-              </network>
-              <network network="pinterest">
-                <i class="fa fa-fw fa-pinterest"></i>
-              </network>
-              <network network="reddit">
-                <i class="fa fa-fw fa-reddit"></i>
-              </network>
-              <network network="twitter">
-                <i class="fa fa-fw fa-twitter"></i>
-              </network>
-              <network network="weibo">
-                <i class="fa fa-weibo"></i>
-              </network>
-              <network network="whatsapp">
-                <i class="fa fa-fw fa-whatsapp"></i>
-              </network>
-            </div>
-          </social-sharing>
-        </div>
-      </article>
+      <result-and-share>
+        {{name.toUpperCase()}}, your name is more <span style="text-transform: uppercase;">{{info.people[highlight]}}</span>!
+        <br> 
+        <br>
+      </result-and-share>
     </section>
   </div>
 </template>
@@ -132,11 +112,14 @@ import MobileDetect from 'mobile-detect'
 import numeral from 'numeral'
 import NavBar from '../components/NavBar'
 import Banner from '../components/Banner'
+import ResultAndShare from '../components/ResultAndShare'
+import totals from '../assets/totals'
+import dataset from '../assets/dataset'
 
 export default {
   name: 'is-more-page',
   components: {
-    NavBar, Banner, IEcharts
+    NavBar, Banner, IEcharts, ResultAndShare
   },
   mounted () {
     const cards = document.getElementsByClassName('card-content')
@@ -145,22 +128,41 @@ export default {
       let computedStyle = window.getComputedStyle(cards[i])
       cards[i].style.width = computedStyle.width
       cards[i].style.height = computedStyle.width
+      // cards[i].style.height = (parseInt(computedStyle.width) + 100) + 'px'
     }
 
-    console.log(IEcharts)
+    this.selectedYear = 2010
   },
   data () {
     return {
-      name: 'Tom',
+      name: 'john',
       year: 2016,
+      selectedYear: 0,
       info: {
         area: ['England', 'Scotland', 'Wales', 'N-Ireland'],
         people: ['English', 'Scottish', 'Welsh', 'N-Irish'],
-        tp: ['42300000', '12300000', '11100000', '8800000'],
-        pn: ['38901', '1239', '3219', '21233'],
-        p: [15, 30, 20, 35]
+        tp: [null, null, null, null],
+        pn: [null, null, null, null],
+        p: [0, 0, 0, 0],
+        pp: [0, 0, 0, 0]
       },
-      loading: true
+      loading: true,
+      highlight: 0,
+      refreshHighlight: -1
+    }
+  },
+  watch: {
+    selectedYear () {
+      this.info.tp = [
+        totals[`England${this.selectedYear}`],
+        totals[`Scotland${this.selectedYear}`],
+        totals[`Wales${this.selectedYear}`],
+        totals[`N-Ireland${this.selectedYear}`]
+      ]
+      this.onChange()
+    },
+    highlight () {
+      console.log(IEcharts)
     }
   },
   computed: {
@@ -168,20 +170,21 @@ export default {
       const md = new MobileDetect(window.navigator.userAgent)
       return md.mobile() !== null
     },
-    highlight () {
-      let max = 0
-      for (var i = 1; i < this.info.p.length; i++) {
-        if (this.info.p[i] > this.info.p[max]) {
-          max = i
-        }
-      }
-      return max
-    },
     bar () {
       return {
         tooltip: {
           trigger: 'item',
           formatter: '{b} ({d}%)'
+        },
+        legend: {
+          orient: 'vertical',
+          x: 'left',
+          data: [
+            'England\n' + this.formatWithUnit(this.info.pn[0]),
+            'Scotland\n' + this.formatWithUnit(this.info.pn[1]),
+            'Wales\n' + this.formatWithUnit(this.info.pn[2]),
+            'N-Ireland\n' + this.formatWithUnit(this.info.pn[3])
+          ]
         },
         series: [
           {
@@ -196,7 +199,7 @@ export default {
               emphasis: {
                 show: true,
                 textStyle: {
-                  fontSize: '30',
+                  fontSize: 30,
                   fontWeight: 'bold'
                 }
               }
@@ -207,13 +210,17 @@ export default {
               }
             },
             data: [
-              {value: this.info.p[0], name: 'England\n' + this.formatWithUnit(this.info.pn[0])},
+              {value: this.info.p[0], name: 'England\n' + this.formatWithUnit(this.info.pn[0]), emphasis: true},
               {value: this.info.p[1], name: 'Scotland\n' + this.formatWithUnit(this.info.pn[1])},
               {value: this.info.p[2], name: 'Wales\n' + this.formatWithUnit(this.info.pn[2])},
               {value: this.info.p[3], name: 'N-Ireland\n' + this.formatWithUnit(this.info.pn[3])}
             ]
           }
-        ]
+        ],
+        textStyle: {
+          fontFamily: 'Ravi Prakash',
+          fontSize: 20
+        }
       }
     }
   },
@@ -221,11 +228,63 @@ export default {
     onReady (instance) {
       this.loading = false
     },
+    onChange () {
+      this.loading = true
+      this.info.pn = this.findName(dataset, this.name, this.selectedYear)
+      this.recalculate()
+    },
+    recalculate () {
+      let totalP = 0
+      for (let i = 0; i < 4; i++) {
+        this.info.pp[i] = (parseInt(this.info.pn[i])) * 100.0 / parseInt(this.info.tp[i])
+        if (isNaN(this.info.pp[i])) {
+          this.info.pp[i] = 0
+        }
+        totalP += this.info.pp[i]
+      }
+      let max = 0
+      for (let i = 0; i < 4; i++) {
+        this.info.p[i] = parseInt(this.info.pp[i] / totalP * 100)
+        if (this.info.p[i] > this.info.p[max]) {
+          max = i
+        }
+      }
+
+      this.highlight = max
+      this.refreshHighlight += 1
+      this.loading = false
+    },
     formatWithComma (n) {
       return numeral(n).format(0)
     },
     formatWithUnit (n) {
       return numeral(n).format('0a')
+    },
+    findName (data, name, year) {
+      var nameData = data.filter(function (d) {
+        return d.name === name.toLowerCase() && d.year === parseInt(year)
+      })
+
+      console.log(nameData)
+
+      // Count array respectively for England, Wales, Scotland, Northern Ireland
+      var nameCount = [null, null, null, null]
+      for (var i = 0; i < nameData.length; i++) {
+        switch (nameData[i].country) {
+          case 'England':
+            nameCount[0] = nameData[i].count
+            break
+          case 'Wales':
+            nameCount[2] = nameData[i].count
+            break
+          case 'Scotland':
+            nameCount[1] = nameData[i].count
+            break
+          case 'NorthernIreland':
+            nameCount[3] = nameData[i].count
+        }
+      }
+      return nameCount
     }
   }
 }

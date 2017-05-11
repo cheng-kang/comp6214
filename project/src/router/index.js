@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HomePage from '@/pages/HomePage'
-import IsCommonPage from '@/pages/IsCommonPage'
 import IsMorePage from '@/pages/IsMorePage'
 import RankMyNamePage from '@/pages/RankMyNamePage'
 import DetailPage from '@/pages/DetailPage'
+import StatisticsPage from '@/pages/StatisticsPage'
+import MeaningPage from '@/pages/MeaningPage'
 
 Vue.use(Router)
 
@@ -16,9 +17,14 @@ export default new Router({
       component: HomePage
     },
     {
-      path: '/is-my-name-common',
-      name: 'is-common-page',
-      component: IsCommonPage
+      path: '/meaning',
+      name: 'meaning-page',
+      component: MeaningPage
+    },
+    {
+      path: '/statistics',
+      name: 'statistics-page',
+      component: StatisticsPage
     },
     {
       path: '/is-more',
