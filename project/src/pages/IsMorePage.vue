@@ -97,6 +97,11 @@
       </div>
     </section>
     <section class="section" :class="{ isMobile: isMobile}">
+      <img :src="`/static/like_${gender}.png`" :class="{ notLiked: notLiked }" alt="Like the page!" width="100" @click="toggleLike">
+      <p>{{likes}} likes</p>
+      <p v-show="!notLiked">👶 Great! Share this page with your friends now! ⤵️</p>
+    </section>
+    <section class="section" :class="{ isMobile: isMobile}">
       <result-and-share>
         {{name.toUpperCase()}}, your name is more <span style="text-transform: uppercase;">{{info.people[highlight]}}</span>!
         <br> 
@@ -115,6 +120,7 @@ import Banner from '../components/Banner'
 import ResultAndShare from '../components/ResultAndShare'
 import totals from '../assets/totals'
 import dataset from '../assets/dataset'
+import { db } from '../components/firebase'
 
 export default {
   name: 'is-more-page',
@@ -132,10 +138,15 @@ export default {
     }
 
     this.selectedYear = 2010
+    this.name = 'john'
+    if (this.$cookie.get('liked')) {
+      this.notLiked = false
+    }
   },
   data () {
     return {
-      name: 'john',
+      name: '',
+      gender: 'M',
       year: 2016,
       selectedYear: 0,
       info: {
@@ -148,7 +159,10 @@ export default {
       },
       loading: true,
       highlight: 0,
-      refreshHighlight: -1
+      refreshHighlight: -1,
+      notLiked: true,
+      likes: 0,
+      dataRef: null
     }
   },
   watch: {
@@ -232,6 +246,27 @@ export default {
       this.loading = true
       this.info.pn = this.findName(dataset, this.name, this.selectedYear)
       this.recalculate()
+      const that = this
+      if (this.dataRef) {
+        this.dataRef.off('value')
+      }
+      this.dataRef = db.ref(`likes/${this.name}`)
+      this.dataRef.on('value', function (snapshot) {
+        that.likes = parseInt(snapshot.val())
+      })
+    },
+    toggleLike () {
+      this.notLiked = !this.notLiked
+      if (this.notLiked) {
+        this.$cookie.delete('liked')
+      } else {
+        this.$cookie.set('liked', true, 365)
+      }
+      const that = this
+      db.ref(`likes/${this.name}`).once('value').then(function (snapshot) {
+        const likes = parseInt(snapshot.val())
+        db.ref(`likes/${that.name}`).set(likes + (that.notLiked ? -1 : 1))
+      })
     },
     recalculate () {
       let totalP = 0
@@ -273,15 +308,19 @@ export default {
         switch (nameData[i].country) {
           case 'England':
             nameCount[0] = nameData[i].count
+            this.gender = nameData[i].gender
             break
           case 'Wales':
             nameCount[2] = nameData[i].count
+            this.gender = nameData[i].gender
             break
           case 'Scotland':
             nameCount[1] = nameData[i].count
+            this.gender = nameData[i].gender
             break
           case 'NorthernIreland':
             nameCount[3] = nameData[i].count
+            this.gender = nameData[i].gender
         }
       }
       return nameCount
@@ -317,5 +356,9 @@ th {
 }
 .isMobile {
   padding-top: 0;
+}
+.notLiked {
+  -webkit-filter: grayscale(1);
+  filter: grayscale(1);
 }
 </style>

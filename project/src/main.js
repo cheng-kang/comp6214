@@ -5,10 +5,14 @@ import App from './App'
 import router from './router'
 import Trend from 'vuetrend'
 import SocialSharing from 'vue-social-sharing'
+import VueFire from 'vuefire'
+import VueCookie from 'vue-cookie'
 
 Vue.config.productionTip = false
 Vue.use(Trend)
 Vue.use(SocialSharing)
+Vue.use(VueFire)
+Vue.use(VueCookie)
 
 /* eslint-disable no-new */
 new Vue({
