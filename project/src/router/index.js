@@ -5,6 +5,8 @@ import IsMorePage from '@/pages/IsMorePage'
 import RankMyNamePage from '@/pages/RankMyNamePage'
 import DetailPage from '@/pages/DetailPage'
 import StatisticsPage from '@/pages/StatisticsPage'
+import ArticlesPage from '@/pages/ArticlesPage'
+import ArticlePage from '@/pages/ArticlePage'
 import MeaningPage from '@/pages/MeaningPage'
 
 Vue.use(Router)
@@ -40,6 +42,16 @@ export default new Router({
       path: '/name/:name',
       name: 'detail-page',
       component: DetailPage
+    },
+    {
+      path: '/articles',
+      name: 'articles-page',
+      component: ArticlesPage
+    },
+    {
+      path: '/article/:id',
+      name: 'article-page',
+      component: ArticlePage
     }
   ]
 })

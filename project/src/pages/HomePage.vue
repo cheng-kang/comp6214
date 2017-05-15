@@ -35,6 +35,7 @@
           </div>
         </div>
       </div>
+      <router-link :to="'/articles'" class="">Want to read more articles about baby names?</router-link>
     </section>
   </div>
 </template>
