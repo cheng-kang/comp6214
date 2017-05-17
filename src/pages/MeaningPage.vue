@@ -11,7 +11,7 @@
           <input class="input" type="text" placeholder="Type in your name" v-model="name" @change="onChange()">
         </p>
         <p class="control">
-          <a class="button" @click="onChange()">
+          <a class="button">
             Explore
           </a>
         </p>
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     onChange () {
-      window.location.href = 'http://localhost:8080/#/meaning/' + this.name.toLowerCase()
+      window.location.href = 'http://localhost:8080/#/meaning-of/' + this.name.toLowerCase()
       window.location.reload()
     }
   }

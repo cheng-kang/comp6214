@@ -143,7 +143,7 @@ export default {
   },
   methods: {
     onChange (e) {
-      window.location.href = 'http://localhost:8080/#/meaning/' + e.target.value.toLowerCase()
+      window.location.href = 'http://localhost:8080/#/meaning-of/' + e.target.value.toLowerCase()
       window.location.reload()
     }
   }

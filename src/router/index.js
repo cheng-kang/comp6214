@@ -36,7 +36,7 @@ export default new Router({
       component: MeaningPage
     },
     {
-      path: '/meaning/:name',
+      path: '/meaning-of/:name',
       name: 'meaning-name',
       component: MeaningName
     },
