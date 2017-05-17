@@ -11,13 +11,13 @@
           <input class="input" type="text" placeholder="Type in your name" v-model="name" @change="onChange()">
         </p>
         <p class="control">
-          <a class="button">
+          <a class="button" @click="onChange()">
             Explore
           </a>
         </p>
       </div>
     </section>
-    <section class="section no-top-padding" :class="{ isMobile: isMobile }" v-show="name === ''">
+    <section class="section no-top-padding" :class="{ isMobile: isMobile }">
       <div class="columns">
         <div class="column is-8 is-offset-2">
           <article class="message is-primary" id="msg-box">
@@ -25,36 +25,11 @@
               <p>Find more about my name</p>
             </div>
             <div class="message-body">
-              Type in your name in the search box above!
+              {{ name === '' ? 'Type in your name in the search box above!' : 'Click "Explore" or press "Enter"!'}}
             </div>
           </article>
         </div>
       </div>
-    </section>
-    <section class="section no-top-padding" :class="{ isMobile: isMobile }" v-show="name !== '' && noMeaning">
-      <div class="columns">
-        <div class="column is-8 is-offset-2">
-          <article class="message is-warning" id="msg-box">
-            <div class="message-header">
-              <p>Name Not Found</p>
-            </div>
-            <div class="message-body" style="text-align: left;">
-              Sorry {{name.toUpperCase()}}, there is no further information about the name.
-              <br>
-              <small>
-                Try this page <a href="#">Find my name</a> and explore more about your name!
-              </small>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-    <section class="section" :class="{ isMobile: isMobile}">
-      <result-and-share>
-        {{name.toUpperCase()}}, share your name on
-        <br> 
-        <br>
-      </result-and-share>
     </section>
   </div>
 </template>
@@ -63,25 +38,10 @@
 import NavBar from '../components/NavBar'
 import Banner from '../components/Banner'
 import MobileDetect from 'mobile-detect'
-import ResultAndShare from '../components/ResultAndShare'
-import meanset from '../assets/nameMeanings'
 export default {
   name: 'meaning-page',
   components: {
-    NavBar, Banner, ResultAndShare
-  },
-  watch: {
-    name () {
-      const nameLowerCase = this.name.toLowerCase()
-      const findMean = Object.keys(meanset).filter(function (n) {
-        return n === nameLowerCase
-      })
-      if (findMean.length === 0 || findMean[0] === '') {
-        this.noMeaning = true
-      } else {
-        this.noMeaning = false
-      }
-    }
+    NavBar, Banner
   },
   data () {
     return {
@@ -96,11 +56,8 @@ export default {
   },
   methods: {
     onChange () {
-      if (this.noMeaning === false) {
-        window.location.href = 'http://localhost:8080/#/meaning/' + this.name.toLowerCase()
-        window.location.reload()
-      }
-      // this.$router.push({name: 'meaning-name', params: {name: this.name.toLowerCase()}})
+      window.location.href = 'http://localhost:8080/#/meaning/' + this.name.toLowerCase()
+      window.location.reload()
     }
   }
 }

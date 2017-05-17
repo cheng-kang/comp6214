@@ -28,7 +28,7 @@
               Sorry {{name.toUpperCase()}}, there is no further information about the name.
               <br>
               <small>
-                Try this page <a href="#">Find my name</a> and explore more about your name!
+                Try this page <a href="#/statistics">Most Popular Names</a> and explore more about baby names!
               </small>
             </div>
           </article>
