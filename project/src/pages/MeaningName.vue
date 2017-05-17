@@ -17,7 +17,7 @@
         </p>
       </div>
     </section>
-    <section class="section" v-if="name != selected">
+    <section class="section">
       <h1 class="title is-5"><strong>{{this.$route.params.name.toUpperCase()}}</strong>, let's see the result:</h1>
       <div class="columns">
         <div class="column is-8 is-offset-2">

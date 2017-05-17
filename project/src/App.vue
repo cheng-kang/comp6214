@@ -44,10 +44,10 @@
                 </p>
               </div>
             </div>
-            <div class="notification is-success" v-if="selected != null && selected == questions[id].answer">
+            <div class="notification is-success" v-if="selectedAnswer != null && selectedAnswer == questions[id].answer">
               Excellent! Click the button below to explore more fun facts!
             </div>
-            <div class="notification is-warning" v-if="selected != null && selected != questions[id].answer">
+            <div class="notification is-warning" v-if="selectedAnswer != null && selectedAnswer != questions[id].answer">
               Emmm...Try again!
             </div>
           </div>
@@ -72,7 +72,7 @@ export default {
   data () {
     return {
       id: 0,
-      selected: null,
+      selectedAnswer: null,
       questions: [{
         'question': 'Does parents in UK tend to prefer to choose more unpopular or popular names for their children?',
         'options': ['Popular names', 'Unpopular names'],
@@ -174,11 +174,11 @@ export default {
       this.$router.replace('/fun-facts')
     },
     onSelect (idx) {
-      this.selected = idx
+      this.selectedAnswer = idx
     },
     changeQuestion () {
       this.id = Math.floor(Math.random() * this.questions.length)
-      this.selected = null
+      this.selectedAnswer = null
     }
   }
 }
