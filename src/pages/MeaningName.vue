@@ -8,7 +8,7 @@
     <section class="section">
       <div class="field has-addons">
         <p class="control is-expanded">
-          <input class="input" type="text" placeholder="Type in your name" v-model="name" @change="onChange()">
+          <input class="input" type="text" placeholder="Type in your name" :value="name" @change="onChange($event)">
         </p>
         <p class="control">
           <a class="button">
@@ -17,7 +17,26 @@
         </p>
       </div>
     </section>
-    <section class="section" v-show="!noMeaning && !noMore()">
+    <section class="section no-top-padding" :class="{ isMobile: isMobile }" v-if="noMeaning">
+      <div class="columns">
+        <div class="column is-8 is-offset-2">
+          <article class="message is-warning" id="msg-box">
+            <div class="message-header">
+              <p>Name Not Found</p>
+            </div>
+            <div class="message-body" style="text-align: left;">
+              Sorry {{name.toUpperCase()}}, there is no further information about the name.
+              <br>
+              <small>
+                Try this page <a href="#">Find my name</a> and explore more about your name!
+              </small>
+            </div>
+          </article>
+          <vue-disqus shortname="babyname-1" :identifier="identifier" :url="url"></vue-disqus>
+        </div>
+      </div>
+    </section>
+    <section class="section" v-if="!noMeaning && noMore">
       <h1 class="title is-5"><strong>{{this.$route.params.name.toUpperCase()}}</strong>, let's see the result:</h1>
       <div class="columns">
         <div class="column is-8 is-offset-2">
@@ -37,7 +56,7 @@
         </div>
       </div>
     </section>
-    <section class="section" v-show="!noMeaning && noMore()">
+    <section class="section" v-if="!noMeaning && !noMore">
       <h1 class="title is-5"><strong>{{this.$route.params.name.toUpperCase()}}</strong>, let's see the result:</h1>
       <div class="columns">
         <div class="column is-8 is-offset-2">
@@ -51,38 +70,17 @@
               <p class="subtitle">
                 <strong>{{this.$route.params.name.toUpperCase()}}</strong>
               </p>
-                <figure>
-                  <img :src="moreset[name].image" style="float:right"/>
-                  <figcaption style="float:right">{{moreset[name].Description}}</figcaption>
-                </figure>
-              <p>Gender: {{moreset[name].Gender}}<p>
-              <p>Pronounced in English: {{moreset[name]['Pronounced in English']}}</p>
+              <figure style="text-align: center; font-size: 0.8em;">
+                <img :src="moreset[name].image" style="width: 100px;">
+                <figcaption>{{moreset[name].Description}}</figcaption>
+              </figure>
+              <p style="opacity: 0.8; margin-top: 20px;">Gender: {{moreset[name].Gender}}<p>
+              <p style="opacity: 0.8; margin-bottom: 20px;">Pronounced in English: {{moreset[name]['Pronounced in English']}}</p>
               <small v-html="content"></small>
             </div>
           </div>
         </div>
       </div>
-    </section>
-    <section class="section no-top-padding" :class="{ isMobile: isMobile }" v-show="name !== '' && noMeaning">
-      <div class="columns">
-        <div class="column is-8 is-offset-2">
-          <article class="message is-warning" id="msg-box">
-            <div class="message-header">
-              <p>Name Not Found</p>
-            </div>
-            <div class="message-body" style="text-align: left;">
-              Sorry {{name.toUpperCase()}}, there is no further information about the name.
-              <br>
-              <small>
-                Try this page <a href="#">Find my name</a> and explore more about your name!
-              </small>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-    <section>
-        <vue-disqus shortname="babyname-1" :identifier="identifier" :url="url"></vue-disqus>
     </section>
     <section class="section" :class="{ isMobile: isMobile}">
       <result-and-share>
@@ -112,15 +110,17 @@ export default {
     this.identifier = window.btoa(this.$route.params.name)
     this.content = meanset[this.$route.params.name]
     this.name = this.$route.params.name
-    let nameLowerCase = this.name.toLowerCase()
-    var findMean = Object.keys(meanset).filter(function (n) {
-      return n === nameLowerCase
-    })
-    if (findMean.length === 0) {
+    console.log(this.name)
+    console.log(Object.keys(meanset))
+    console.log(Object.keys(meanset).indexOf(this.name.toLowerCase()) === -1)
+    if (Object.keys(meanset).indexOf(this.name.toLowerCase()) === -1) {
       this.noMeaning = true
     } else {
       this.noMeaning = false
     }
+  },
+  mounted () {
+    console.log(this)
   },
   data () {
     return {
@@ -136,20 +136,15 @@ export default {
     isMobile () {
       const md = new MobileDetect(window.navigator.userAgent)
       return md.mobile() !== null
+    },
+    noMore () {
+      return Object.keys(moreset).indexOf(this.$route.params.name) === -1
     }
   },
   methods: {
-    onChange () {
-      if (this.noMeaning === false) {
-        window.location.href = 'http://localhost:8080/#/meaning/' + this.name.toLowerCase()
-        window.location.reload()
-      }
-    },
-    noMore () {
-      console.log(this.$route.params.name)
-      console.log(Object.keys(moreset))
-      console.log(Object.keys(moreset).indexOf(this.$route.params.name) > 0)
-      return Object.keys(moreset).indexOf(this.$route.params.name) > 0
+    onChange (e) {
+      window.location.href = 'http://localhost:8080/#/meaning/' + e.target.value.toLowerCase()
+      window.location.reload()
     }
   }
 }

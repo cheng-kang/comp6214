@@ -76,7 +76,7 @@ export default {
       const findMean = Object.keys(meanset).filter(function (n) {
         return n === nameLowerCase
       })
-      if (findMean.length === 0) {
+      if (findMean.length === 0 || findMean[0] === '') {
         this.noMeaning = true
       } else {
         this.noMeaning = false
