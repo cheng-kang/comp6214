@@ -5,6 +5,7 @@
   "author": "Kang Cheng <me@chengkang.pw>",
   "private": true,
   "scripts": {
+    "postinstall": "npm install express",
     "dev": "node build/dev-server.js",
     "prestart": "next build",
     "start": "next start -p ${PORT}",
