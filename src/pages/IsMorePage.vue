@@ -252,7 +252,11 @@ export default {
       }
       this.dataRef = db.ref(`likes/${this.name}`)
       this.dataRef.on('value', function (snapshot) {
-        that.likes = parseInt(snapshot.val())
+        if (snapshot.val()) {
+          that.likes = parseInt(snapshot.val())
+        } else {
+          that.likes = 0
+        }
       })
     },
     toggleLike () {
