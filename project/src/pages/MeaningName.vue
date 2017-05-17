@@ -17,7 +17,7 @@
         </p>
       </div>
     </section>
-    <section class="section">
+    <section class="section" v-show="!noMeaning && !noMore()">
       <h1 class="title is-5"><strong>{{this.$route.params.name.toUpperCase()}}</strong>, let's see the result:</h1>
       <div class="columns">
         <div class="column is-8 is-offset-2">
@@ -31,20 +31,58 @@
               <p class="subtitle">
                 <strong>{{this.$route.params.name.toUpperCase()}}</strong>
               </p>
-              <small>
-              English form of Iohannes, the Latin form of the Greek name Ιωαννης (Ioannes), itself derived from the Hebrew name יוֹחָנָן (Yochanan) meaning "YAHWEH is gracious". The Hebrew form occurs in the Old Testament (spelled Johanan or Jehohanan in the English version), but this name owes its popularity to two New Testament characters, both highly revered saints. The first is John the Baptist, a Jewish ascetic who is considered the forerunner of Jesus. He baptized Jesus and was later executed by Herod Antipas. The second is the apostle John, who is traditionally regarded as the author of the fourth gospel and Revelation. With the apostles Peter and James (his brother), he was part of the inner circle of Jesus.
-              <br>
-              This name was initially more common among Eastern Christians in the Byzantine Empire, but it flourished in Western Europe after the First Crusade. In England it became extremely popular: during the later Middle Ages it was given to approximately a fifth of all English boys.
-              <br>
-              The name (in various spellings) has been borne by 21 popes and eight Byzantine emperors, as well as rulers of England, France, Sweden, Denmark, Poland, Portugal, Bulgaria, Russia and Hungary. It was also borne by the poet John Milton (1608-1674), philosopher John Locke (1632-1704), American founding father and president John Adams (1735-1826), and poet John Keats (1795-1821). Famous bearers of the 20th century include author John Steinbeck (1902-1968), assassinated American president John F. Kennedy (1917-1963), and musician John Lennon (1940-1980).
-              </small>
+              <small v-html="content"></small>
             </div>
           </div>
-          <vue-disqus shortname="babyname-1" :identifier="identifier" :url="url"></vue-disqus>
+        </div>
+      </div>
+    </section>
+    <section class="section" v-show="!noMeaning && noMore()">
+      <h1 class="title is-5"><strong>{{this.$route.params.name.toUpperCase()}}</strong>, let's see the result:</h1>
+      <div class="columns">
+        <div class="column is-8 is-offset-2">
+          <div class="card">
+            <header class="card-header">
+              <p class="card-header-title">
+                More information about the name
+              </p>
+            </header>
+            <div class="card-content" style="text-align: justify;">
+              <p class="subtitle">
+                <strong>{{this.$route.params.name.toUpperCase()}}</strong>
+              </p>
+                <figure>
+                  <img :src="moreset[name].image" style="float:right"/>
+                  <figcaption style="float:right">{{moreset[name].Description}}</figcaption>
+                </figure>
+              <p>Gender: {{moreset[name].Gender}}<p>
+              <p>Pronounced in English: {{moreset[name]['Pronounced in English']}}</p>
+              <small v-html="content"></small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section no-top-padding" :class="{ isMobile: isMobile }" v-show="name !== '' && noMeaning">
+      <div class="columns">
+        <div class="column is-8 is-offset-2">
+          <article class="message is-warning" id="msg-box">
+            <div class="message-header">
+              <p>Name Not Found</p>
+            </div>
+            <div class="message-body" style="text-align: left;">
+              Sorry {{name.toUpperCase()}}, there is no further information about the name.
+              <br>
+              <small>
+                Try this page <a href="#">Find my name</a> and explore more about your name!
+              </small>
+            </div>
+          </article>
         </div>
       </div>
     </section>
     <section>
+        <vue-disqus shortname="babyname-1" :identifier="identifier" :url="url"></vue-disqus>
     </section>
     <section class="section" :class="{ isMobile: isMobile}">
       <result-and-share>
@@ -62,22 +100,36 @@ import Banner from '../components/Banner'
 import MobileDetect from 'mobile-detect'
 import ResultAndShare from '../components/ResultAndShare'
 import VueDisqus from 'vue-disqus/VueDisqus.vue'
+import meanset from '../assets/nameMeanings.js'
+import moreset from '../assets/moreInfo.js'
 export default {
   name: 'meaning-name',
   components: {
     NavBar, Banner, ResultAndShare, VueDisqus
   },
-  mounted () {
+  beforeMount () {
     this.url = 'http://localhost:8080' + this.$route.fullPath
     this.identifier = window.btoa(this.$route.params.name)
-    console.log(this.url)
-    console.log(this.identifier)
+    this.content = meanset[this.$route.params.name]
+    this.name = this.$route.params.name
+    let nameLowerCase = this.name.toLowerCase()
+    var findMean = Object.keys(meanset).filter(function (n) {
+      return n === nameLowerCase
+    })
+    if (findMean.length === 0) {
+      this.noMeaning = true
+    } else {
+      this.noMeaning = false
+    }
   },
   data () {
     return {
       name: '',
       url: '',
-      identifier: ''
+      identifier: '',
+      content: '',
+      noMeaning: true,
+      moreset: moreset
     }
   },
   computed: {
@@ -88,8 +140,16 @@ export default {
   },
   methods: {
     onChange () {
-      window.location.href = 'http://localhost:8080/#/meaning/' + this.name.toLowerCase()
-      // this.$router.push({name: 'meaning-name', params: {name: this.name.toLowerCase()}})
+      if (this.noMeaning === false) {
+        window.location.href = 'http://localhost:8080/#/meaning/' + this.name.toLowerCase()
+        window.location.reload()
+      }
+    },
+    noMore () {
+      console.log(this.$route.params.name)
+      console.log(Object.keys(moreset))
+      console.log(Object.keys(moreset).indexOf(this.$route.params.name) > 0)
+      return Object.keys(moreset).indexOf(this.$route.params.name) > 0
     }
   }
 }
