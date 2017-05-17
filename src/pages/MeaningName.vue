@@ -53,6 +53,7 @@
               <small v-html="content"></small>
             </div>
           </div>
+          <vue-disqus shortname="babyname-1" :identifier="identifier" :url="url"></vue-disqus>
         </div>
       </div>
     </section>
@@ -79,6 +80,7 @@
               <small v-html="content"></small>
             </div>
           </div>
+          <vue-disqus shortname="babyname-1" :identifier="identifier" :url="url"></vue-disqus>
         </div>
       </div>
     </section>

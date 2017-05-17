@@ -264,7 +264,7 @@ export default {
       }
       const that = this
       db.ref(`likes/${this.name}`).once('value').then(function (snapshot) {
-        const likes = parseInt(snapshot.val())
+        const likes = parseInt(snapshot.val()) || 0
         db.ref(`likes/${that.name}`).set(likes + (that.notLiked ? -1 : 1))
       })
     },
