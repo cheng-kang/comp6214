@@ -12,20 +12,23 @@
           <div class="card">
             <header class="card-header">
               <p class="card-header-title" style="justify-content: center;">
-                {{article.title}}
+                {{articles[id].title}}
               </p>
             </header>
             <div class="card-content" style="text-align: justify;">
               <p class="subtitle" style="text-align: right;">
-                <small style="opacity: 0.9;">{{article.date}}</small>
+                <small style="opacity: 0.9;">
+                  by: <a :href="articles[id].url">{{articles[id].author}}</a>
+                  <br>
+                  {{articles[id].date}}
+                </small>
               </p>
-              <small>
-              {{article.content}}
+              <small v-html="articles[id].content" class="article-content">
               </small>
             </div>
           </div>
-          <a v-show="id > 1" :href="`/#/article/${parseInt(id)-1}`" class="pagination">Prev</a>
-          <router-link v-show="id < count" :to="`/article/${parseInt(id)+1}`" class="pagination" style="float: right;" replace>Next</router-link>
+          <a v-show="id > 0" class="pagination" @click="page(-1)">Prev</a>
+          <a v-show="id < articles.length - 1" class="pagination" @click="page(1)" style="float: right;">Next</a>
         </div>
       </div>
     </section>
@@ -35,24 +38,25 @@
 <script>
 import NavBar from '../components/NavBar'
 import Banner from '../components/Banner'
+import articles from '../assets/articles'
 export default {
   name: 'article-page',
   components: {
     NavBar, Banner
   },
   mounted () {
-    this.id = this.$route.params.id
+    this.id = parseInt(this.$route.params.id) - 1 || 1
   },
   data () {
     return {
       id: 0,
-      count: 2,
-      article: {
-        title: 'Fun facts about baby names!',
-        id: 1,
-        date: '2017-05-13',
-        content: '5. Moxie CrimeFighter and Zolten\nIllusionist Penn Jillette isn\'t fooling anyone with the unusual names for his kids: Moxie CrimeFighter and Zolten. Do you think Zolten is a CrimeFighter with Moxie?\n4. Pilot Inspektor\nSome things just aren\'t intended to be names. Sometimes, if you want to choose an unusal name, it\'s better to balance it with a more traditional name. Of course, Jason Lee and Beth Riesgraf didn\'t get that memo when they named Pilot Inspektor.\n3. Kal-El\nSuperman has a fan in Nicolas Cage, who named his son Kal-El, which is the first name of the Man of Steel.\n2. Jermajesty\nJerm-Jerma... no, no, no. This name is pronounced like Her Majesty, but with a J at the start of it. That one comes from parents Jermaine Jackson and Alejandra Genevieve Oaziaza. \'Nuff said.\n1. Moon Unit, Dweezil and Diva Muffin\nYou can\'t have a list of unusual celebrity baby names without mentioning the kids of Frank Zappa: Moon Unit, Dweezil and Diva Muffin. The man (in the photo above with "Valley Girl" singer Moon Unit) is a pioneer in the naming division, for sure.\n'
-      }
+      articles: articles
+    }
+  },
+  methods: {
+    page (which) {
+      this.id += which
+      window.location.hash = `#/article/${this.id + 1}`
     }
   }
 }

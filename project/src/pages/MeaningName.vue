@@ -17,7 +17,7 @@
         </p>
       </div>
     </section>
-    <section class="section">
+    <section class="section" v-if="name != selected">
       <h1 class="title is-5"><strong>{{this.$route.params.name.toUpperCase()}}</strong>, let's see the result:</h1>
       <div class="columns">
         <div class="column is-8 is-offset-2">
@@ -40,11 +40,11 @@
               </small>
             </div>
           </div>
+          <vue-disqus shortname="babyname-1" :identifier="identifier" :url="url"></vue-disqus>
         </div>
       </div>
     </section>
     <section>
-        <vue-disqus shortname="babyname-1" :identifier="identifier" :url="url"></vue-disqus>
     </section>
     <section class="section" :class="{ isMobile: isMobile}">
       <result-and-share>

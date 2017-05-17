@@ -7,6 +7,9 @@ import DetailPage from '@/pages/DetailPage'
 import StatisticsPage from '@/pages/StatisticsPage'
 import MeaningPage from '@/pages/MeaningPage'
 import MeaningName from '@/pages/MeaningName'
+import ArticlesPage from '@/pages/ArticlesPage'
+import ArticlePage from '@/pages/ArticlePage'
+import FunFactsPage from '@/pages/FunFactsPage'
 
 Vue.use(Router)
 
@@ -16,6 +19,16 @@ export default new Router({
       path: '/',
       name: 'home-page',
       component: HomePage
+    },
+    {
+      path: '/articles',
+      name: 'articles-page',
+      component: ArticlesPage
+    },
+    {
+      path: '/article/:id',
+      name: 'article-page',
+      component: ArticlePage
     },
     {
       path: '/meaning',
@@ -46,6 +59,11 @@ export default new Router({
       path: '/name/:name',
       name: 'detail-page',
       component: DetailPage
+    },
+    {
+      path: '/fun-facts',
+      name: 'fun-facts-page',
+      component: FunFactsPage
     }
   ]
 })

@@ -17,6 +17,7 @@
           {{subtitle}}
         </h2>
       </div>
+      <img src="../assets/funfacts.png" alt="Fun Facts" class="funfact" @click="activateModal" v-show="$route.path != '/fun-facts'">
     </div>
   </section>
 </template>
@@ -28,6 +29,11 @@ export default {
   props: ['title', 'subtitle'],
   data () {
     return {
+    }
+  },
+  methods: {
+    activateModal () {
+      document.getElementById('question').className = 'modal is-active'
     }
   }
 }
@@ -50,8 +56,23 @@ export default {
   background-size: cover;
   background-position: center;
   z-index: 10;
+  position: relative;
 }
 .container {
   z-index: 99;
+}
+
+.funfact {
+  position: absolute;
+  width: 150px;
+  right: 0;
+  bottom: 0;
+  -ms-transform: rotate(-30deg); /* IE 9 */
+  -webkit-transform: rotate(-30deg); /* Chrome, Safari, Opera */
+  transform: rotate(-30deg);
+}
+.funfact:hover {
+  width: 170px;
+  cursor: pointer;
 }
 </style>

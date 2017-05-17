@@ -17,13 +17,6 @@
         </p>
       </div>
     </section>
-    <section class="section" :class="{ isMobile: isMobile}">
-      <result-and-share>
-        {{name.toUpperCase()}}, share your name on
-        <br> 
-        <br>
-      </result-and-share>
-    </section>
   </div>
 </template>
 
