@@ -145,6 +145,8 @@ export default {
   beforeUpdate () {
     if (this.$cookie.get(this.name)) {
       this.notLiked = false
+    } else {
+      this.notLiked = true
     }
   },
   data () {
@@ -262,6 +264,11 @@ export default {
           that.likes = 0
         }
       })
+      if (this.$cookie.get(this.name)) {
+        this.notLiked = false
+      } else {
+        this.notLiked = true
+      }
     },
     toggleLike () {
       this.notLiked = !this.notLiked
