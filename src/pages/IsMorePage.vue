@@ -138,8 +138,12 @@ export default {
     }
 
     this.selectedYear = 2010
-    this.name = 'john'
-    if (this.$cookie.get('liked')) {
+    if (this.$cookie.get(this.name)) {
+      this.notLiked = false
+    }
+  },
+  beforeUpdate () {
+    if (this.$cookie.get(this.name)) {
       this.notLiked = false
     }
   },
@@ -262,9 +266,9 @@ export default {
     toggleLike () {
       this.notLiked = !this.notLiked
       if (this.notLiked) {
-        this.$cookie.delete('liked')
+        this.$cookie.delete(this.name)
       } else {
-        this.$cookie.set('liked', true, 365)
+        this.$cookie.set(this.name, true, 365)
       }
       const that = this
       db.ref(`likes/${this.name}`).once('value').then(function (snapshot) {
