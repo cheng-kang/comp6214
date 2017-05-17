@@ -57,7 +57,6 @@ export default {
   methods: {
     onChange () {
       window.location.href = 'http://localhost:8080/#/meaning-of/' + this.name.toLowerCase()
-      window.location.reload()
     }
   }
 }
