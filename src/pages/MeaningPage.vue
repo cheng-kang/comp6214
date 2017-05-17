@@ -56,7 +56,8 @@ export default {
   },
   methods: {
     onChange () {
-      window.location.href = 'http://localhost:8080/#/meaning-of/' + this.name.toLowerCase()
+      // window.location.href = 'http://localhost:8080/#/meaning-of/' + this.name.toLowerCase()
+      window.location.href = 'https://babynamesatuk.herokuapp.com/#/meaning-of/' + this.name.toLowerCase()
     }
   }
 }
